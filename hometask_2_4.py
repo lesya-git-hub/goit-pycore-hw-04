@@ -1,6 +1,7 @@
 # Напишіть консольного бота помічника, який повинен вміти працювати з книгою контактів та календарем.
 import os
 import re
+from colorama import Fore, Style
 
 # 1. Зберігання даних 
 def save_data(contacts):
@@ -45,27 +46,32 @@ def parse_input(user_input):
     return cmd, [name, phone_cleaned]
 
 def add_contact(args, contacts):
-    if len(args) < 2: return "Error: Give me name and phone please."
+    if len(args) < 2: return "😒 Error: Give me name and phone please."
     # "add username phone". За цією командою бот зберігає у пам'яті новий контакт.
     name = args[0]
     phone = args[1]
     contacts[name] = phone
     save_data(contacts)
-    return "Contact added."
+    return f"📞 {name}: {contacts[name]}"
 
 def change_contact(args, contacts):
     # "change username phone". За цією командою бот зберігає в пам'яті новий номер телефону phone
     # для контакту username, що вже існує в записнику.
-    if len(args) < 2: return "Error: Give me name and phone please."
+    if len(args) < 2: return "🤔 Error: Give me name and phone please."
     # "add username phone". За цією командою бот зберігає у пам'яті новий контакт.
     name = args[0]
     phone = args[1]
     contacts[name] = phone
     save_data(contacts)
-    return "Contact updated."
+    return "😊 Contact updated."
+
+def phone(args, contacts):
+    if not args: return "😕 Error: Give me name please."
+    name = args[0]
+    return contacts.get(name, "😕 Contact not found.")
 
 def delete_contact(args, contacts):
-    if not args: return "Error: Give me name please."
+    if not args: return "🤔 Error: Give me name please."
     name = args[0]
     if name in contacts:
         contacts.pop(name)
@@ -81,26 +87,28 @@ def show_all(contacts):
 # 3. Головний цикл
 def main():
     contacts = load_data()
-    print("Welcome to the assistant bot!")
+    print("🤖🌸 Welcome to the assistant bot!📱📒")
     while True:
-        user_input = input("Enter a command {Add contacts, Change contacts, All, Delete contact, Exit}: ").strip()
+        user_input = input("Enter a command 📒 " + Fore.CYAN + Style.BRIGHT + "Add contacts, Change contacts, All, Delete contact, Exit: " + Style.RESET_ALL).strip()
         command, args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            print("Good bye!")
+            print("🤖 Good bye! 🌸")
             break
         elif command == "hello":
-            print("How can I help you?")
+            print("🤖 How can I help you? ☕")
         elif command == "add":
             print(add_contact(args, contacts))
         elif command == "change":
             print(change_contact(args, contacts))    
         elif command == "all":
             print(show_all(contacts))
+        elif command == "phone":
+            print(phone(args, contacts))
         elif command == "delete":
             print(delete_contact(args, contacts))
         else:
-            print("Invalid command.")
+            print("🤨 Invalid command.")
 
 if __name__ == "__main__":
     main()

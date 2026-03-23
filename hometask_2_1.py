@@ -3,9 +3,10 @@
 def total_salary(path):
 #Функція аналізує файл, обчислює загальну та середню суму заробітної плати.
 #Результатом роботи функції є кортеж із двох чисел: загальної суми зарплат і середньої заробітної плати.
-    total_salary = 0
+    total_salary = 0.0
     worker_count = 0
     worker_name = ''
+    average_salary = 0.0
     try:
         with open(path, 'r', encoding='utf-8') as file:
            for line in file:
@@ -18,12 +19,13 @@ def total_salary(path):
                if worker_count == 0:
                    print("Не знайдено списку робітників")
                    return 0, 0
-           return total_salary, worker_count 
+           average_salary = float(total_salary/worker_count)
+           return total_salary, average_salary
     except FileNotFoundError:
         print("File not found, please check the path to the file")
         return 0, 0 
 
-total_salary, worker_count = total_salary('worker_salary.txt')
-print(f'Загальна сума заробітної плати: {total_salary}, Середня заробітна плата: {float(total_salary/worker_count)}')
+total_salary, average_salary = total_salary('worker_salary.txt')
+print(f'Загальна сума заробітної плати: {total_salary}, Середня заробітна плата: {average_salary}')
 
 
